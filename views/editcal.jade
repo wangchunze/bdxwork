@@ -1,0 +1,85 @@
+doctype html
+head
+        title= title
+
+        link(rel='stylesheet', href='/bi/calendar/css/main.css')
+        link(rel='stylesheet', href='/bi/calendar/css/form.css')
+        link(rel='stylesheet', href='/bi/calendar/css/plugin/dp.css')
+        link(rel='stylesheet', href='/bi/calendar/css/plugin/dropdown.css')
+    body
+        div.editPanel
+          a#closeDailog.closeDailog(href='javascript:void(0);',hidefocus='on')
+          form#fmEdit(action='/bi/calendar/save/'+data.Id,method='post')
+
+              div.rowctl
+                  div.atomctl
+                      label._w90
+                          span *
+                          |#{__("subject")}:
+                      input._w400(type='text',id="tbSubject",name="Subject",placeholder="#{__('placeholder_subject')}",value=data.Subject)
+
+              div.rowctl(style="display:none")
+                div.atomctl
+                  label._w90 &nbsp;
+                  input(type='checkbox',id="cbIsAllDayEvent",name="IsAllDayEvent",value='True',checked=data.IsAllDayEvent)
+                  label.labelforcb(for="cbIsAllDayEvent") #{__("alldayevent")}
+              div.rowctl
+                div.atomctl
+                  label._w90 
+                    span *
+                    |#{__("eventtime")}:
+                  input._w110(type='text',id="tbStartDate",name="StartDate",value=data.startdate)
+                  input(type='text',id="tbStartTime",name="StartTime",style="width:35px;",maxlength="5",value=data.starttime)
+                div.atomctl
+                  label(style='width:25px;') #{__("to")}
+                  input._w110(type='text',id="tbEndDate",name="EndDate",value=data.enddate)
+                  input(type='text',id="tbEndTime",name="EndTime",style="width:35px;",maxlength="5",value=data.endtime)
+              div.rowctl
+                div.atomctl
+                  label._w90 #{__("color")}:
+                  div#dvcolorpanel.colorpanel 
+                  input(type='hidden',id="tbCategory",name="Category",value=data.Category)
+
+              div.rowctl
+                div.atomctl
+                  label._w90 #{__("description")}:
+                  textarea._w400(id="tbDescription",name="Description",placeholder="#{__('placeholder_description')}")=data.Description
+
+              div.rowctl
+                div.atomctl
+                  label._w90 #{"工作类型"}:
+                  select(id="RecordType",name="RecordType",style="width:100px")
+                     option(value=1) 日常维护
+                     option(value=2) 项目维护
+                     option(value=3) 故障处理
+                     option(value=4) 学习培训
+                     option(value=5) 技术创新
+                     option(value=6) 需求开发
+                     option(value=7) 项目开发
+                     option(value=8) 工作值班
+                     option(value=9) 系统优化
+                     option(value=10) 其他开发
+
+                  label._w90 #{"工时系数"}:
+                  select(id="Coefficient",name="Coefficient",style="width:170px" )
+                     option(value=1) 正常：1
+                     option(value=2) 客户要求的周末：2
+                     option(value=3) 节假日：3
+                     option(value=6) 周末系统优化：6
+                     option(value=9) 节假日系统优化：9
+                  input(type='hidden',id="hidType",name="hidType" value=data.type)
+                  input(type='hidden',id="hidCoefficient",name="hidCoefficient" value=data.Coefficient)
+
+              div.rowctl
+                div.btnpanel
+                  button.btn.btn-danger(type='submit') #{__("save")}
+                  button#btnClose.btn(type='button') #{__("cancel")}
+              div(style='display:none')
+                input(type='hidden',id="tbTimeZone",name="TimeZone")
+          script(type="text/javascript",src='/bi/calendar/js/locales/#{__("langcode")}.js')
+          script(type="text/javascript",src='/bi/calendar/js/sea.js')
+          script(type='text/javascript',src='/bi/calendar/js/seaconfig.js')
+          script(type='text/javascript').
+              seajs.use('page/editcal', function(app) {
+                    app.init();
+                });

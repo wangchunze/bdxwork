@@ -1,0 +1,47 @@
+extends layout
+block headcontent
+  link(rel='stylesheet', href='/bi/calendar/css/plugin/minical.css')
+  link(rel='stylesheet', href='/bi/calendar/css/plugin/calendar.css')
+  link(rel='stylesheet', href='/bi/calendar/css/plugin/dailog.css')
+  link(rel='stylesheet', href='/bi/calendar/css/bdx.css')
+block content
+  #mainpanel
+    #toppanel_new
+      div#loadingpannel
+      div#errorpannel #{__("defaulterrormsg")}
+      p.logo=title
+
+      div.calbtnp3_new
+        div
+
+          a#langch(href='/bi/calendar/logout' style="float:right;") 登出
+          //a#langch(href='/calendar/?lang=zh-cn') 中文
+          //span |
+          //a#langen(href='/calendar/?lang=en-us') English
+          button#workstat.btn.btn-info(type='button',class="menu1")="统计"
+          button#yuliu.btn.btn-info(type='button',class="menu1")="建设中"
+          button#workrecord.btn.btn-info(type='button',class="menu1")="工作记录"
+
+
+    #leftpanel
+      .reprot_menu
+        button#statBydate.btn.btn-block(type='button' style="width:150px") #{"个人工作量日统计"}
+    #rightpanel
+      #toppanel
+      div.calbtnp3
+        div
+
+          button#workstat_export.btn.btn-info(type='button',class="menu1")="导出excel"
+
+      div#main(style='height:500px;border:1px solid #ccc;padding:10px;')
+
+block jscontent
+  script(type="text/javascript",src='/bi/calendar/js/echarts-all.js')
+  script(type="text/javascript",src='/bi/calendar/js/sea.js')
+  script(type='text/javascript',src='/bi/calendar/js/seaconfig.js')
+  script(type='text/javascript').
+    seajs.use('page/report', function(app) {
+      app.init();
+    });
+
+

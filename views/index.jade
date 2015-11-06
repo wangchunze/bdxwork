@@ -1,0 +1,64 @@
+extends layout
+block headcontent
+  link(rel='stylesheet', href='/bi/calendar/css/plugin/minical.css')
+  link(rel='stylesheet', href='/bi/calendar/css/plugin/calendar.css')
+  link(rel='stylesheet', href='/bi/calendar/css/plugin/dailog.css')
+  link(rel='stylesheet', href='/bi/calendar/css/bdx.css')
+block content
+  #mainpanel
+    #toppanel_new
+      div#loadingpannel
+      div#errorpannel #{__("defaulterrormsg")}
+      p.logo=title
+
+      div.calbtnp3_new
+        div
+
+          a#langch(href='/bi/calendar/logout' style="float:right;") 登出
+          //a#langch(href='/calendar/?lang=zh-cn') 中文
+          //span |
+          //a#langen(href='/calendar/?lang=en-us') English
+          button#workstat.btn.btn-info(type='button',class="menu1")="统计"
+          button#yuliu.btn.btn-info(type='button',class="menu1")="建设中"
+          button#workrecord.btn.btn-info(type='button',class="menu1")="工作记录"
+          input(type='hidden',id="queryUserId",value=quserid)
+          input(type='hidden',id="UserId",value=userid)
+          select.search-query(id="UserList",class="menu1",style="height:30px")
+            each user in users
+             option(value=user.Id) #{user.UserName}
+
+    #leftpanel
+      .addbtnp
+        button#addcalbtn.btn.btn-danger(type='button') #{__("create")}
+
+      #minical.minical
+    #rightpanel
+      #toppanel
+        div.calbtnp1
+          button#todaybtn.btn(type='button')=__("today")
+          div.btngroup
+            span#prevbtn.btn.prevbtn(type='button')
+              em
+            span#nextbtn.btn.nextbtn(type='button')
+              em
+          div#dateshow
+
+        div.calbtnp2
+          div#viewswithbtn.btngroup
+            button#daybtn.btn(type='button') #{__("day")}
+            button#weekbtn.btn.current(type='button') #{__("week")}
+            button#monthbtn.btn(type='button') #{__("month")}
+      #xgcalendarp
+       div.bottom  base on
+        a(target='_blank',href='https://github.com/xuanye/xgcalendar') xgcalendar
+block jscontent
+  script(type="text/javascript",src='/bi/calendar/js/locales/#{__("langcode")}.js')
+  script(type="text/javascript",src='/bi/calendar/js/sea.js')
+  script(type='text/javascript',src='/bi/calendar/js/seaconfig.js')
+  script(type='text/javascript').
+    var loadingmsg = '#{__("loadingmsg")}';
+    var sucessmsg = '#{__("successmsg")}';
+    var processdatamsg = '#{__("processdatamsg")}';
+    seajs.use('page/index', function(app) {
+      app.init();
+    });

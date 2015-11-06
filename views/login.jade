@@ -1,0 +1,50 @@
+doctype html
+
+head
+
+
+
+    link(rel='stylesheet', href='/bi/calendar/css/bdx.css')
+    link(rel='stylesheet', href='/bi/calendar/css/main.css')
+    link(rel='stylesheet', href='/bi/calendar/css/form.css')
+    link(rel='stylesheet', href='/bi/calendar/css/plugin/dp.css')
+    link(rel='stylesheet', href='/bi/calendar/css/plugin/dropdown.css')
+
+body
+
+
+        div.top150
+        div#loadingpannel
+        div#errorpannel #{errorInfo}
+        form#login(action='/bi/calendar/logon',method='post')
+
+                div.rowctl
+                    div.atomctl
+                        label._w90
+                            span *
+                            | #{'用户名'}:
+                        input._w400(type='text',id="username",name="username",placeholder="#{__('请输入用户名')}",value='')
+
+                div.rowctl
+                    div.atomctl
+                        label._w90
+                            span *
+                            | #{'密码'}:
+                        input._w400(type='password',id="password",name="password",placeholder="#{__('请输入密码')}",value='')
+                        input(type='hidden',id="errorInfo",value=errorInfo)
+                div.rowctl
+                    div.bdx_btnpanel
+                        button.btn.btn-danger(type='submit') #{__("登陆")}
+
+
+block jscontent
+
+    script(type="text/javascript",src='/bi/calendar/js/sea.js')
+    script(type='text/javascript',src='/bi/calendar/js/seaconfig.js')
+    script(type='text/javascript').
+        var loadingmsg = '#{__("loadingmsg")}';
+        var sucessmsg = '#{__("successmsg")}';
+        var processdatamsg = '#{__("processdatamsg")}';
+        seajs.use('page/login', function(app) {
+            app.init();
+        });
