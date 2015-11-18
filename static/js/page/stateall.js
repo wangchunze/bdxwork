@@ -58,27 +58,27 @@ define(function(require, exports, module) {
 
         $.ajax({//默认查询
             type: "POST", //
-            url: "/bi/calendar/report",
-            data: {'starttime':$("#tbStartDate").val()+' 00:00:00','endtime':$("#tbEndDate").val()+' 23:59:59'},
+            url: "/bi/calendar/stat_all",
+            data: {'starttime':$("#tbStartDate").val()+' 00:00:00','endtime':$("#tbEndDate").val()+' 23:59:59','isAll':$("#isAll").val()},
             dataType: "text",
             success:function(data) {
                 var obj=JSON.parse(data);
-                statBydate(obj.stateinfo);
+                statAll(obj.stateinfo);
             },
             error: function(data) {
 
             }
         });
 
-        $("#statBydate").click(function() {
+        $("#statAll").click(function() {
             $.ajax({
                 type: "POST", //
-                url: "/bi/calendar/report",
-                data: {'starttime':$("#tbStartDate").val()+' 00:00:00','endtime':$("#tbEndDate").val()+' 23:59:59'},
+                url: "/bi/calendar/stat_all",
+                data: {'starttime':$("#tbStartDate").val()+' 00:00:00','endtime':$("#tbEndDate").val()+' 23:59:59','isAll':$("#isAll").val()},
                 dataType: "text",
                 success:function(data) {
                     var obj=JSON.parse(data);
-                    statBydate(obj.stateinfo);
+                    statAll(obj.stateinfo);
                 },
                 error: function(data) {
 
@@ -94,15 +94,15 @@ define(function(require, exports, module) {
         var ret= (hour>9?hour:"0"+hour)+":"+(minute>9?minute:"0"+minute) ;
         return ret;
     }
-    function statBydate(data){
+    function statAll(data){
 
         var myChart = echarts.init(document.getElementById('m'));
 
         var days=new Array();
         var worklength=[];
         data.forEach(function(e){
-            days.push(e.days) ;
-            worklength.push(Number(e.timelength));
+            days.push(e.username) ;
+            worklength.push(Number(e.hours));
         })
 
         myChart.setOption({

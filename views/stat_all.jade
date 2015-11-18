@@ -4,7 +4,6 @@ block headcontent
   link(rel='stylesheet', href='/bi/calendar/css/form.css')
   link(rel='stylesheet', href='/bi/calendar/css/plugin/dp.css')
   link(rel='stylesheet', href='/bi/calendar/css/plugin/dropdown.css')
-
 block left
     #leftpanel
       #leftmenu.reprot_menu
@@ -25,7 +24,7 @@ block content
               div.atomctl
                 label(style='width:40px;')
               div.atomctl
-                button#statBydate.btn.btn-info(type='button',class="menu1")="统计"
+                button#statAll.btn.btn-info(type='button',class="menu1")="统计"
 
                 //button#workstat_export.btn.btn-info(type='button',class="menu1")="导出excel"
         div#m(style='height:500px;border:1px solid #ccc;padding:10px;')
@@ -41,7 +40,7 @@ block jscontent
     var loadingmsg = '#{__("loadingmsg")}';
     var sucessmsg = '#{__("successmsg")}';
     var processdatamsg = '#{__("processdatamsg")}';
-    seajs.use(['page/index','page/report'], function (index,report) {
+    seajs.use(['page/index','page/stateall'], function (index,report) {
       index.index();
       report.init();
     });

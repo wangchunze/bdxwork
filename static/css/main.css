@@ -345,5 +345,10 @@ button
   text-align: left;
   margin-left: 5px;
 }
+.calbtnp_export
+{
+  float: left;
+  padding: 3px 0;
+}
 
 /********** add by wcz end****************/

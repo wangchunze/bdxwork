@@ -25,6 +25,8 @@ exports.index = function(req,res){
     {
        i18n.setLocale('zh-cn');
     }
+
+    //查询用户
     var users = [];
     calendardao.QueryUsers(function(dbdata){
 

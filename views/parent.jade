@@ -1,16 +1,10 @@
-doctype html
-head
-    title= __("title")
-    meta(http-equiv='Content-Type',content='text/html; charset=UTF-8')
-    link(rel='stylesheet', href='/bi/calendar/css/main.css')
+extends layout
+block headcontent
     link(rel='stylesheet', href='/bi/calendar/css/plugin/minical.css')
     link(rel='stylesheet', href='/bi/calendar/css/plugin/calendar.css')
     link(rel='stylesheet', href='/bi/calendar/css/plugin/dailog.css')
     link(rel='stylesheet', href='/bi/calendar/css/bdx.css')
-    block headcontent
-body
-
-block top
+block content
     #mainpanel
         #toppanel_new
             div#loadingpannel
@@ -19,18 +13,18 @@ block top
             div.calbtnp3_new
                 div#topMenu
                     a#langch(href='/bi/calendar/logout' style="float:right;") 登出
+                    //a#langch(href='/calendar/?lang=zh-cn') 中文
+                    //span |
+                    //a#langen(href='/calendar/?lang=en-us') English
                     input(type='hidden',id="queryUserId",value=quserid)
                     input(type='hidden',id="UserId",value=userid)
-                    input(type='hidden',id="MenuId")
                     select.search-query(id="UserList",class="menu1",style="height:30px")
-                      each user in users
-                        option(value=user.Id) #{user.UserName}
-block left
+                each user in users
+                    option(value=user.Id) #{user.UserName}
         #leftpanel
-          .addbtnp
-            button#addcalbtn.btn.btn-danger(type='button') #{__("create")}
-          #minical.minical
-block content
+            .addbtnp
+                button#addcalbtn.btn.btn-danger(type='button') #{__("create")}
+            #minical.minical
         #rightpanel
             #toppanel
                 div.calbtnp1
@@ -54,9 +48,9 @@ block jscontent
     script(type="text/javascript",src='/bi/calendar/js/sea.js')
     script(type='text/javascript',src='/bi/calendar/js/seaconfig.js')
     script(type='text/javascript').
-      var loadingmsg = '#{__("loadingmsg")}';
-      var sucessmsg = '#{__("successmsg")}';
-      var processdatamsg = '#{__("processdatamsg")}';
-      seajs.use('page/index', function(app) {
-        app.init();
-      });
+        var loadingmsg = '#{__("loadingmsg")}';
+        var sucessmsg = '#{__("successmsg")}';
+        var processdatamsg = '#{__("processdatamsg")}';
+        seajs.use('page/index', function (app) {
+            app.init();
+        });

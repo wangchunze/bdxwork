@@ -15,6 +15,7 @@ var install = require('./routes/install');
 var users = require('./routes/users');
 var calendar = require('./routes/calendar');
 var excel = require('./routes/excel');
+var menu = require('./routes/menu');
 var cookieSession = require('cookie-session');
 
 i18n.configure({
@@ -79,8 +80,10 @@ function checkLogin(req, res, next) {
   next();
 }
 
-app.get('/bi/calendar/excel',excel.test);
 app.get('/bi/calendar/report',excel.report);
+app.get('/bi/calendar/stat_all',excel.stat_all);
+app.get('/bi/calendar/wrdetail',excel.wrdetail);
+app.get('/bi/calendar/wralldetail',excel.wralldetail);
 app.use('/bi/calendar', routes);
 app.get('/bi/calendar',checkLogin);
 app.get('/bi/calendar/index',checkLogin);
@@ -89,6 +92,7 @@ app.get('/bi/calendar/index/:userid',checkLogin);
 app.get('/bi/calendar/index', calendar.index);
 app.get('/bi/calendar/add', calendar.editview);
 app.get('/bi/calendar/edit/:id', calendar.editview);
+app.get('/bi/calendar/excel/:starttime/:endtime/:isAll',excel.test);
 
 app.use('/bi/calendar/install', install);
 app.use('/bi/calendar/query', calendar.query);
@@ -97,7 +101,12 @@ app.use('/bi/calendar/update', calendar.update);
 app.use('/bi/calendar/delete', calendar.delete);
 app.use('/bi/calendar/save/:id', calendar.save);
 app.use('/bi/calendar/report', excel.query);
+app.use('/bi/calendar/stat_all', excel.statall);
+app.use('/bi/calendar/wr_detail', excel.wr_detail);
+
 app.use('/bi/calendar',i18n.init);
+app.use('/bi/calendar/menu',menu.query);
+
 
 app.use(function(req, res, next){
   res.locals.user = req.session.user;

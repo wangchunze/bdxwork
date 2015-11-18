@@ -2,8 +2,8 @@ define(function(require, exports, module) { //参数名字不能改
   var minicalendar = require("../plugin/minicalendar");
   require("plugin/xgcalendar");
   require("dailog");
+  require("cookie");
   exports.init =function() {
-
       //动态加载后台数据
       $("#UserList").val( $("#queryUserId").val());
       $("#UserList").change(function(){
@@ -33,6 +33,22 @@ define(function(require, exports, module) { //参数名字不能改
       $("#workrecord").click(function() {
 
       });
+
+      $.ajax({
+          type: "POST", //
+          url: "/bi/calendar/menu",
+          data: {'pmenid':''},
+          dataType: "text",
+          success:function(data) {
+              var obj=JSON.parse(data);
+              addTopMenu(obj.menuinfo);
+          },
+          error: function(data) {
+
+          }
+      });
+
+
 
      var minical =new minicalendar({
         onchange:datechange
@@ -177,5 +193,83 @@ define(function(require, exports, module) { //参数名字不能改
         $("#daybtn").addClass("current");             
     }
 
+    //add by wangcz
+    function addTopMenu(data){
+
+        data.forEach(function(e){
+            var btn=$("<button type='button'  id='menu_"+ e.id+"' class='btn btn-info menu1' value='"+e.MenuName+"' "+ ">"+e.MenuName+"</button>");
+            $("#topMenu").append(btn);
+            addBtnEvent("menu_"+e.id, e.id,e.url);
+            $("#topMenu").val(e.id);
+        })
+    }
+    function addBtnEvent(menuid,id,url) {
+        $("#" + menuid).bind("click", function () {
+            $.cookie('menuId', id);
+            window.location.href=url;
+        });
+    }
   }
+
+    exports.index =function() {
+
+        //动态加载后台数据
+        $("#UserList").val( $("#queryUserId").val());
+        $("#UserList").change(function(){
+            var param=[];
+            param.push($("#UserList").val());
+            var url = StrFormat("/bi/calendar/index/{0}",param);
+            window.location.href=url;
+        });
+
+        var readonly=$("#queryUserId").val()!=$("#UserId").val();
+        if(readonly){
+            //$('#addcalbtn').hide();
+            $('#addcalbtn').attr("disabled","disabled");
+            $('#addcalbtn').attr("class","");
+        }else{
+            //$('#addcalbtn').show();
+            $('addcalbtn').removeAttr("disabled");
+        }
+
+        $("#workstat").click(function() {
+            window.location.href="/bi/calendar/report";
+        });
+        $("#yuliu").click(function() {
+            alert("正在建设中");
+        });
+
+        $("#workrecord").click(function() {
+
+        });
+
+        $.ajax({
+            type: "POST", //
+            url: "/bi/calendar/menu",
+            data: {'pmenid':''},
+            dataType: "text",
+            success:function(data) {
+                var obj=JSON.parse(data);
+                addTopMenu(obj.menuinfo);
+            },
+            error: function(data) {
+
+            }
+        });
+
+        //add by wangcz
+        function addTopMenu(data){
+            data.forEach(function(e){
+                var btn=$("<button type='button'  id='menu_"+ e.id+"' class='btn btn-info menu1' "+ ">"+e.MenuName+"</button>");
+                $("#topMenu").append(btn);
+                addBtnEvent("menu_"+e.id, e.id,e.url);
+            })
+        }
+        function addBtnEvent(menuid,id,url) {
+            $("#" + menuid).bind("click", function () {
+                $.cookie('menuId', id);
+                window.location.href=url;
+            });
+        }
+    }
 });

@@ -1,0 +1,68 @@
+extends index
+block headcontent
+  link(rel='stylesheet', href='/bi/calendar/css/main.css')
+  link(rel='stylesheet', href='/bi/calendar/css/form.css')
+  link(rel='stylesheet', href='/bi/calendar/css/plugin/dp.css')
+  link(rel='stylesheet', href='/bi/calendar/css/plugin/dropdown.css')
+  link(rel='stylesheet', href='/bi/calendar/css/table.css')
+block left
+    #leftpanel
+      #leftmenu.reprot_menu
+block content
+    #rightpanel
+      #toppanel
+        div.calbtnp_export
+            form
+              div.rowctl
+                div.atomctl
+                  label._w90
+                    span *
+                    |#{"时间"}:
+                  input._w110(type='text',id="tbStartDate",name="StartDate" readonly="true")
+                div.atomctl
+                  label(style='width:25px;') #{__("to")}
+                  input._w110(type='text',id="tbEndDate",name="EndDate" readonly="true")
+                div.atomctl
+                  label(style='width:40px;')
+                div.atomctl
+                  button#workstat_export.btn.btn-info(type='button',class="menu1")="导出excel"
+                  button#statAll.btn.btn-info(type='button',class="menu1")="查询"
+        div(style='width:100%;height:500px;border:1px solid #ccc;padding:10px;')
+          div(style="margin-top:45px")
+            table(id="tableInfo" class="hovertable")
+              tr(onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';")
+                th 填写时间
+                th 开始时间
+                th 结束时间
+                th 工作标题
+                th 工作描述
+                th 工作类型
+                th 负责人
+                th 工时
+                th 工时系数
+                th 工时合计
+
+        div(style='display:none')
+          input(type='hidden',id="tbTimeZone",name="TimeZone")
+          input(type='hidden',id="isAll",name="isAll" value=isAll)
+block jscontent
+  script(type="text/javascript",src='/bi/calendar/js/echarts-all.js')
+  script(type="text/javascript",src='/bi/calendar/js/locales/#{__("langcode")}.js')
+  script(type="text/javascript",src='/bi/calendar/js/sea.js')
+  script(type='text/javascript',src='/bi/calendar/js/seaconfig.js')
+  script(type='text/javascript').
+    var loadingmsg = '#{__("loadingmsg")}';
+    var sucessmsg = '#{__("successmsg")}';
+    var processdatamsg = '#{__("processdatamsg")}';
+    seajs.use(['page/index','page/wrdetail'], function (index,report) {
+      index.index();
+      report.init();
+    });
+
+
+
+
+
+
+
+

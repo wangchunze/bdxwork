@@ -1733,7 +1733,7 @@
                 temparr.push('<li id="1">日常维护</li><li id="2">项目维护</li> <li id="3">故障处理</li> ')
                 temparr.push('<li id="4">学习培训</li><li id="5">技术创新</li> <li id="6">需求开发</li> ')
                 temparr.push('<li id="7">项目开发</li><li id="8">工作值班</li> <li id="9">系统优化</li> ')
-                temparr.push('<li id="10">其他开发</li>')
+                temparr.push('<li id="10">其他开发</li><li id="11">临时提数</li> <li id="12">口径确认</li>')
                 temparr.push('</ul></div></div></div></td></tr>');
                 temparr.push('<tr><th class="cb-key">');
                 temparr.push("工时系数", ':</th><td class="cb-value"><div class="textbox-fill-wrapper"><div   class="textbox-fill-mid">');

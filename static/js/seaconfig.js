@@ -5,11 +5,12 @@ seajs.config({
       'datepicker': 'plugin/jquery.datepicker.js',
       'validate': 'plugin/jquery.validate.js',
       'dropdown': 'plugin/jquery.dropdown.js',
-      'dailog': 'plugin/jquery.ifrmdailog.js'          
+      'dailog': 'plugin/jquery.ifrmdailog.js',
+      'cookie': 'plugin/jquery.cookie.js'
   },
   preload: [
    'jquery',
-   'common' 
+   'common'
   ],
   debug: true,
   map: [
