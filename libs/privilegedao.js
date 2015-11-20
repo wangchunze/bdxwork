@@ -70,7 +70,7 @@ exports.queryMenu = function(pmenuid,userId,datacb,errcb) {
 exports.WorkRecord = function(qstart,qend,userId,datacb,errcb) {
     var db  = GetConnection(true);
     db.connect();
-    var sql ="select workrecord.id,DATE_FORMAT(UpTime, '%Y-%m-%d %H:%m:%S') UpTime,DATE_FORMAT(StartTime, '%Y-%m-%d %H:%m:%S') StartTime,DATE_FORMAT(EndTime, '%Y-%m-%d %H:%m:%S') EndTime,Subject,Description,Type,UserName,WorkTimeLength/3600 WorkTimeLength,Coefficient,(WorkTimeLength/3600)*Coefficient wc from workrecord,user where workrecord.userid=user.id and  StartTime<=:end and endtime>=:start and userid =:UserId ";
+    var sql ="select workrecord.id,DATE_FORMAT(UpTime, '%Y-%m-%d %H:%i:%s') UpTime,DATE_FORMAT(StartTime, '%Y-%m-%d %H:%i:%s') StartTime,DATE_FORMAT(EndTime, '%Y-%m-%d %H:%i:%s') EndTime,Subject,Description,Type,UserName,WorkTimeLength/3600 WorkTimeLength,Coefficient,(WorkTimeLength/3600)*Coefficient wc from workrecord,user where workrecord.userid=user.id and  StartTime<=:end and endtime>=:start and userid =:UserId ";
     db.query(sql,{start:qstart,end:qend,UserId:userId},
         function(err,r){ //数据放回来
             db.end();

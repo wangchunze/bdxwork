@@ -101,9 +101,9 @@ exports.WorkRecord = function(qstart,qend,userId,isAll,datacb,errcb) {
     db.connect();
     var sql="";
     if(isAll=="false"){
-        sql ="select workrecord.id,DATE_FORMAT(UpTime, '%Y-%m-%d %H:%m:%S') UpTime,DATE_FORMAT(StartTime, '%Y-%m-%d %H:%m:%S') StartTime,DATE_FORMAT(EndTime, '%Y-%m-%d %H:%m:%S') EndTime,Subject,Description,Type,UserName,WorkTimeLength/3600 WorkTimeLength,Coefficient,(WorkTimeLength/3600)*Coefficient wc from workrecord,user where workrecord.userid=user.id and  StartTime<=:end and endtime>=:start and userid =:UserId ";
+        sql ="select workrecord.id,DATE_FORMAT(UpTime, '%Y-%m-%d %H:%i:%s') UpTime,DATE_FORMAT(StartTime, '%Y-%m-%d %H:%i:%s') StartTime,DATE_FORMAT(EndTime, '%Y-%m-%d %H:%i:%s') EndTime,Subject,Description,Type,UserName,WorkTimeLength/3600 WorkTimeLength,Coefficient,(WorkTimeLength/3600)*Coefficient wc from workrecord,user where workrecord.userid=user.id and  StartTime<=:end and endtime>=:start and userid =:UserId ";
     }else{
-        sql ="select workrecord.id,DATE_FORMAT(UpTime, '%Y-%m-%d %H:%m:%S') UpTime,DATE_FORMAT(StartTime, '%Y-%m-%d %H:%m:%S') StartTime,DATE_FORMAT(EndTime, '%Y-%m-%d %H:%m:%S') EndTime,Subject,Description,Type,UserName,WorkTimeLength/3600 WorkTimeLength,Coefficient,(WorkTimeLength/3600)*Coefficient wc from workrecord,user where workrecord.userid=user.id and  StartTime<=:end and endtime>=:start ";
+        sql ="select workrecord.id,DATE_FORMAT(UpTime, '%Y-%m-%d %H:%i:%s') UpTime,DATE_FORMAT(StartTime, '%Y-%m-%d %H:%i:%s') StartTime,DATE_FORMAT(EndTime, '%Y-%m-%d %H:%i:%s') EndTime,Subject,Description,Type,UserName,WorkTimeLength/3600 WorkTimeLength,Coefficient,(WorkTimeLength/3600)*Coefficient wc from workrecord,user where workrecord.userid=user.id and  StartTime<=:end and endtime>=:start ";
     }
 
     db.query(sql,{start:qstart,end:qend,UserId:userId},

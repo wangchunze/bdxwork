@@ -93,6 +93,7 @@ app.get('/bi/calendar/index', calendar.index);
 app.get('/bi/calendar/add', calendar.editview);
 app.get('/bi/calendar/edit/:id', calendar.editview);
 app.get('/bi/calendar/excel/:starttime/:endtime/:isAll',excel.test);
+app.get('/bi/calendar/impportwr',excel.importwr);
 
 app.use('/bi/calendar/install', install);
 app.use('/bi/calendar/query', calendar.query);

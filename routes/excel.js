@@ -40,7 +40,7 @@ exports.test = function(req,res){
         width:15
     },{//工作类型
         caption:'工作类型',
-        type:'number',
+        type:'string',
         width:10
     },{//工作负责人
         caption:'工作负责人',
