@@ -372,8 +372,8 @@ exports.add = function(req,res){
     var userId= req.session.user.Id;
     var type=  req.body.type;
     var coefficient=  req.body.coefficient;
-    var zonediff      = serverzone-clientzone ; 
-    
+    var zonediff      = serverzone-clientzone ;
+
     data.CalendarType = 1;
     var starttimp    = Date.parse(strStartTime,__("datefullparseformat"));//new Date(strStartTime);
     var endtimp      = Date.parse(strEndTime,__("datefullparseformat"));

@@ -36,16 +36,22 @@ define(function(require, exports, module) {
         });
         //add by wangcz
         function addLeftMenu(data){
+
             data.forEach(function(e){
                 var btn=$("<button type='button'  id='menu_"+ e.id+"' style='margin-top: 5px;width:150px' class='btn btn-block' "+ ">"+e.MenuName+"</button>");
-
+                if("menu_"+e.id== $.cookie('level2menuId')){
+                    btn=$("<button type='button'  id='menu_"+ e.id+"' style='margin-top: 5px;width:150px' class='btn btn-danger' "+ ">"+e.MenuName+"</button>");
+                }
                 $("#leftmenu").append(btn);
                 addBtnEvent("menu_"+e.id,e.url);
                 $("#topMenu").val(e.id);
             })
         }
         function addBtnEvent(id,url) {
+
             $("#" + id).bind("click", function () {
+                $.cookie('level2menuId',id);
+
                 window.location.href=url;
             });
         }

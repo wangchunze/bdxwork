@@ -51,7 +51,9 @@ exports.StateWorkByDate = function(qstart,qend,userId,datacb,errcb) {
 exports.StateAll = function(qstart,qend,userId,datacb,errcb) {
     var db  = GetConnection(true);
     db.connect();
-    var sql ="select wr.userid,u.UserName, format(sum(worktimelength*Coefficient)/3600,2)  hours  from  workrecord wr,user u where u.id=wr.UserId and StartTime<=:end and endtime>=:start group by wr.userid,u.UserName ;";
+    //var sql ="select wr.userid,u.UserName,u.email, format(sum(worktimelength*Coefficient)/3600,2)  hours  from  workrecord wr,user u where u.id=wr.UserId and StartTime<=:end and endtime>=:start group by wr.userid,u.UserName ;";
+    var sql ="select  u.id,u.UserName,u.email, IFNULL(format(sum(worktimelength*Coefficient)/3600,2),0.00)  hours  from  user u left JOIN workrecord wr on u.id=wr.UserId and StartTime<=:end and endtime>=:start  where u.role=6   group by u.id,u.UserName,u.email ;";
+     console.log("stallSql :"+sql);
     db.query(sql,{start:qstart,end:qend},
         function(err,r){ //数据放回来
             db.end();

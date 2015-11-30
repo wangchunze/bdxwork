@@ -193,22 +193,7 @@ define(function(require, exports, module) { //参数名字不能改
         $("#daybtn").addClass("current");             
     }
 
-    //add by wangcz
-    function addTopMenu(data){
 
-        data.forEach(function(e){
-            var btn=$("<button type='button'  id='menu_"+ e.id+"' class='btn btn-info menu1' value='"+e.MenuName+"' "+ ">"+e.MenuName+"</button>");
-            $("#topMenu").append(btn);
-            addBtnEvent("menu_"+e.id, e.id,e.url);
-            $("#topMenu").val(e.id);
-        })
-    }
-    function addBtnEvent(menuid,id,url) {
-        $("#" + menuid).bind("click", function () {
-            $.cookie('menuId', id);
-            window.location.href=url;
-        });
-    }
   }
 
     exports.index =function() {
@@ -257,19 +242,25 @@ define(function(require, exports, module) { //参数名字不能改
             }
         });
 
-        //add by wangcz
-        function addTopMenu(data){
-            data.forEach(function(e){
-                var btn=$("<button type='button'  id='menu_"+ e.id+"' class='btn btn-info menu1' "+ ">"+e.MenuName+"</button>");
-                $("#topMenu").append(btn);
-                addBtnEvent("menu_"+e.id, e.id,e.url);
-            })
-        }
-        function addBtnEvent(menuid,id,url) {
-            $("#" + menuid).bind("click", function () {
-                $.cookie('menuId', id);
-                window.location.href=url;
-            });
-        }
+    }
+    //add by wangcz
+    function addTopMenu(data){
+        var flag=true;
+        data.forEach(function(e){
+            var btn=$("<button type='button'  id='menu_"+ e.id+"' class='btn btn-info menu1' value='"+e.MenuName+"' "+ ">"+e.MenuName+"</button>");
+            if(($.cookie('menuId')==null&&flag==true)|| e.id== $.cookie('menuId')){
+                btn=$("<button type='button'  id='menu_"+ e.id+"' class='btn btn-danger menu1' "+ ">"+e.MenuName+"</button>");
+            }
+            flag=false;
+            $("#topMenu").append(btn);
+            addBtnEvent("menu_"+e.id, e.id,e.url);
+            $("#topMenu").val(e.id);
+        })
+    }
+    function addBtnEvent(menuid,id,url) {
+        $("#" + menuid).bind("click", function () {
+            $.cookie('menuId', id);
+            window.location.href=url;
+        });
     }
 });

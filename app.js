@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var fs = require('fs');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
@@ -13,10 +14,14 @@ var login = require('./routes/login');
 var validator=require('validator');
 var install = require('./routes/install');
 var users = require('./routes/users');
+var upload = require('./routes/upload');
 var calendar = require('./routes/calendar');
 var excel = require('./routes/excel');
 var menu = require('./routes/menu');
 var cookieSession = require('cookie-session');
+var schedule = require('./routes/schedule');
+
+schedule.schedule(); //启动调度器
 
 i18n.configure({
   locales:['zh-cn','en','en-us'],
@@ -36,7 +41,7 @@ var friends = 10
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/bi/calendar",express.static(path.join(__dirname, 'static')));
 app.use(flash());
@@ -45,7 +50,6 @@ app.use(cookieSession({
   name: 'session',     //  he name of the cookie to set
 keys: ['key1', 'key2']
 }));
-
 
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
@@ -93,7 +97,8 @@ app.get('/bi/calendar/index', calendar.index);
 app.get('/bi/calendar/add', calendar.editview);
 app.get('/bi/calendar/edit/:id', calendar.editview);
 app.get('/bi/calendar/excel/:starttime/:endtime/:isAll',excel.test);
-app.get('/bi/calendar/impportwr',excel.importwr);
+app.get('/bi/calendar/excel/:filename',excel.download);
+app.get('/bi/calendar/importwr',excel.importwr);
 
 app.use('/bi/calendar/install', install);
 app.use('/bi/calendar/query', calendar.query);
@@ -104,9 +109,11 @@ app.use('/bi/calendar/save/:id', calendar.save);
 app.use('/bi/calendar/report', excel.query);
 app.use('/bi/calendar/stat_all', excel.statall);
 app.use('/bi/calendar/wr_detail', excel.wr_detail);
+app.use('/bi/calendar/', upload);
 
 app.use('/bi/calendar',i18n.init);
 app.use('/bi/calendar/menu',menu.query);
+
 
 
 app.use(function(req, res, next){

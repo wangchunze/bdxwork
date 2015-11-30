@@ -3,6 +3,7 @@ var reportdao = require("../libs/reportdao");
 var calendardao = require("../libs/calendardao");
 var util        = require('util');
 var viewhelper = require("../libs/viewhelper");
+var fs = require('fs');
 var i18n = require('i18n');
 require('date-utils');
 var TIMEZONE_INDEX = new Date().getTimezoneOffset()/60 * -1;
@@ -101,6 +102,16 @@ exports.test = function(req,res){
 
     });
 
+}
+exports.download = function(req,res){
+    var filename =req.params.filename; // 当前是那一天
+    console.log("filename : "+filename);
+    var pdf = fs.createReadStream("./public/source/"+filename);
+    res.writeHead(200, {
+        'Content-Type': 'application/force-download',
+        'Content-Disposition': 'attachment; filename='+filename
+    });
+    pdf.pipe(res);
 }
 
 exports.report = function(req,res){
@@ -247,6 +258,44 @@ exports.wralldetail = function(req,res){
     },function(err) {
     });
 }
+
+exports.importwr = function(req,res){
+    var importinfo=req.flash('importinfo');
+
+    var userid=req.params.userid;
+    if(userid !=null)
+    {   req.session.quser={};
+        req.session.quser.userId=userid;
+    }else{
+        req.session.quser={};
+        req.session.quser.userId=req.session.user.Id;
+    }
+    var lang = req.query.lang;
+    if(lang=='en-us')
+    {
+        i18n.setLocale('en-us');
+    }
+    else
+    {
+        i18n.setLocale('zh-cn');
+    }
+
+    //查询用户
+    var users = [];
+    calendardao.QueryUsers(function(dbdata){
+
+        for(var i=0,l=dbdata.length;i<l;i++)
+        {   var user={};
+            user.Id=dbdata[i].Id;
+            user.UserName=dbdata[i].UserName;
+            users.push(user);
+        }
+        console.log("users :"+JSON.stringify(users));
+        res.render('import_wr',{title:req.session.user.UserName+"，您好",users:users,quserid:req.session.quser.userId,userid:req.session.user.Id,importinfo:importinfo});
+    },function(err) {
+    });
+}
+// 以下为处理post请求
 exports.query = function(req,res){
 
     var starttime =req.body.starttime; // 当前是那一天

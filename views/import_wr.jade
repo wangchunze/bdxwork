@@ -1,0 +1,63 @@
+extends index
+block headcontent
+  link(rel='stylesheet', href='/bi/calendar/css/main.css')
+  link(rel='stylesheet', href='/bi/calendar/css/form.css')
+  link(rel='stylesheet', href='/bi/calendar/css/plugin/dp.css')
+  link(rel='stylesheet', href='/bi/calendar/css/plugin/dropdown.css')
+block left
+    #leftpanel
+      #leftmenu.reprot_menu
+block content
+    #rightpanel
+      #toppanel
+        div.calbtnp_export
+
+          form(method='post', enctype="multipart/form-data" action="/bi/calendar/file-upload")
+            div.rowctl
+              table(style='width: 100%;height: 100%')
+                tr
+                  td(style='width:800px;text-align: center;')
+                     input(type="file" name="file" style="width:300px;")
+                     input.btn.btn-info(type="submit" value="导入")
+                     input.btn.btn-info(id="example_export" type="button" value="下载模板")
+            each info in importinfo
+              div(style="color:red")  #{info}
+              //div.atomctl
+                label._w90
+                  span *
+                  |#{"时间"}:
+                input._w110(type='text',id="tbStartDate",name="StartDate" readonly="true")
+              //div.atomctl
+                label(style='width:25px;') #{__("to")}
+                input._w110(type='text',id="tbEndDate",name="EndDate" readonly="true")
+              //div.atomctl
+                label(style='width:40px;')
+              //div.atomctl
+                button#statAll.btn.btn-info(type='button',class="menu1")="统计"
+
+                //button#workstat_export.btn.btn-info(type='button',class="menu1")="导出excel"
+
+        div(style='display:none')
+          input(type='hidden',id="tbTimeZone",name="TimeZone")
+
+block jscontent
+  script(type="text/javascript",src='/bi/calendar/js/echarts-all.js')
+  script(type="text/javascript",src='/bi/calendar/js/locales/#{__("langcode")}.js')
+  script(type="text/javascript",src='/bi/calendar/js/sea.js')
+  script(type='text/javascript',src='/bi/calendar/js/seaconfig.js')
+  script(type='text/javascript').
+    var loadingmsg = '#{__("loadingmsg")}';
+    var sucessmsg = '#{__("successmsg")}';
+    var processdatamsg = '#{__("processdatamsg")}';
+    seajs.use(['page/index','page/importwr'], function (index,report) {
+      index.index();
+      report.init();
+    });
+
+
+
+
+
+
+
+
