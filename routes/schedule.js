@@ -2,6 +2,7 @@
 var schedule = require('node-schedule');
 var reportdao = require("../libs/reportdao");
 var nodemailer = require("nodemailer");
+var log = require("../static/js/logHelper").helper;
 var async = require('async');
 
 exports.schedule = function(){
@@ -51,7 +52,7 @@ exports.schedule = function(){
                         text: "Hello ，"+e.username+":您今天提价工工作量"+e.hours+"小时，请按时提交，谢谢。",                          // 文本内容
                         html: "Hello  ，"+e.username+"<br>您今天提交工作量"+e.hours+"小时，请按时提交，谢谢。<br><font color='red'>每天下午4点半检查工作量情况，不足5小时自动发送此邮件。</font><br><font color='red'>此为系统自动发送，请勿回复</font>"
                     }
-
+                    
                     /*smtpTransport.sendMail(mailOptions, function(error, response){
                         if(error){
                             log.writeErr(error);
