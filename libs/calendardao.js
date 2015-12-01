@@ -159,7 +159,6 @@ exports.UpdateCalendar = function(id,userid,calendar,cb,errcb){
     var db = GetConnection();
     db.connect();
     var sql = "UPDATE `workrecord` SET ? WHERE Id="+id+" and UserId='"+userid+"'";
-    console.log("calendar : "+JSON.stringify(calendar));
     delete calendar["RecordType"];
     delete calendar["IsAllDayEvent"];
     delete calendar["MasterId"];
@@ -175,7 +174,7 @@ exports.UpdateCalendar = function(id,userid,calendar,cb,errcb){
             return;
         }
         if(cb)
-        { console.log("cb : "+JSON.stringify(cb));
+        {
             var affectedRows = result != null? result.affectedRows:0;
             cb(affectedRows);
         }

@@ -7,7 +7,6 @@ var i18n = require('i18n');
 var TIMEZONE_INDEX = new Date().getTimezoneOffset()/60 * -1;
 
 exports.index = function(req,res){
-    //console.log(i18n.getLocale());
     var userid=req.params.userid;
     if(userid !=null)
     {   req.session.quser={};
@@ -36,7 +35,6 @@ exports.index = function(req,res){
             user.UserName=dbdata[i].UserName;
             users.push(user);
         }
-        console.log("users :"+JSON.stringify(users));
         res.render('index',{title:req.session.user.UserName+"，您好",users:users,quserid:req.session.quser.userId,userid:req.session.user.Id});
     },function(err) {
 
@@ -106,7 +104,6 @@ exports.query = function(req,res) {
             }            
           
             var respstr =JSON.stringify(ret);
-            console.log("respstr : "+respstr);
             respstr = respstr.replace(/\//ig,"\\\/");        
             res.set('Content-Type', 'application/json; charset=utf-8');
             res.send(respstr);
@@ -136,7 +133,6 @@ exports.editview  = function(req,res){
          if(dbdata && dbdata.length>0)
          {
             eventdata = dbdata[0];
-             console.log("this data : "+JSON.stringify(eventdata));
             //eventdata.IsAllDayEvent = eventdata.IsAllDayEvent[0]==1;
              eventdata.IsAllDayEvent =false;
              eventdata.MasterId=8;
@@ -149,7 +145,6 @@ exports.editview  = function(req,res){
             eventdata.endtime   = eventdata.EndTime.toFormat("HH24:MI");
             eventdata.type   = eventdata.Type;
             eventdata.coefficient   = eventdata.Coefficient;
-             console.log("eventdata : "+JSON.stringify(eventdata));
             res.render("editcal",{title:__("edittitle"),data:eventdata});
          }
          else
@@ -201,7 +196,6 @@ exports.editview  = function(req,res){
 }
 
 exports.save = function(req,res){
-  console.log("----------------------: "+req.params.id);
   var id = req.params.id;
   var ret       = {};
   // 校验
@@ -286,7 +280,6 @@ exports.save = function(req,res){
     data.StartTime = starttime.addHours(zonediff);
     data.EndTime = endtime.addHours(zonediff);
   }
-  //console.log(data);
   if(data.EndTime <= data.StartTime)
   {
     ret.IsSuccess = false;
@@ -425,7 +418,6 @@ exports.add = function(req,res){
         else
         {
           ret.IsSuccess = false;
-            console.log(4);
           ret.Msg       = __("defaulterrormsg");         
         }  
         res.json(ret);

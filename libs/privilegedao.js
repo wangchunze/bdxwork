@@ -45,13 +45,11 @@ exports.queryMenu = function(pmenuid,userId,datacb,errcb) {
         " where m.parentmenuid is null and   u.DeptCode=dm.deptid and dm.MenuId=m.id "+
         " and u.id=:UserId ;";
     }
-    console.log("sql :"+sql);
     db.query(sql,{pmenuid:pmenuid,UserId:userId},
         function(err,r){ //数据放回来
             db.end();
             if(err)
             {
-                console.log(err);
                 if(errcb)
                 {
                     errcb(err);
@@ -76,7 +74,6 @@ exports.WorkRecord = function(qstart,qend,userId,datacb,errcb) {
             db.end();
             if(err)
             {
-                console.log(err);
                 if(errcb)
                 {
                     errcb(err);

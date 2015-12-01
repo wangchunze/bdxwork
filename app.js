@@ -1,4 +1,5 @@
 var express = require('express');
+var log4js = require('log4js');
 var path = require('path');
 var fs = require('fs');
 var favicon = require('serve-favicon');
@@ -22,6 +23,8 @@ var cookieSession = require('cookie-session');
 var schedule = require('./routes/schedule');
 
 schedule.schedule(); //启动调度器
+// 注：配置里的日志目录要先创建，才能加载配置，不然会出异常
+var log = require("./static/js/logHelper").helper;
 
 i18n.configure({
   locales:['zh-cn','en','en-us'],
@@ -36,10 +39,10 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-var friends = 10
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+//app.use(logger('dev'));
+app.use(log4js.connectLogger(log4js.getLogger("normal"), {level: log4js.levels.INFO}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());

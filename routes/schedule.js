@@ -5,7 +5,6 @@ var nodemailer = require("nodemailer");
 var async = require('async');
 
 exports.schedule = function(){
-    console.log("=============");
     var smtpTransport = nodemailer.createTransport("SMTP",{
         host: "smtp.qq.com", // 主机
         secureConnection: true, // 使用 SSL
@@ -21,6 +20,7 @@ exports.schedule = function(){
     rule.dayOfWeek = [1, new schedule.Range(2, 5)];
     rule.hour = 16;
     rule.minute = 30;
+    rule.second=0;
     var j = schedule.scheduleJob(rule, function(){
         //发邮件
         var todayDate=new Date();
@@ -51,14 +51,15 @@ exports.schedule = function(){
                         text: "Hello ，"+e.username+":您今天提价工工作量"+e.hours+"小时，请按时提交，谢谢。",                          // 文本内容
                         html: "Hello  ，"+e.username+"<br>您今天提交工作量"+e.hours+"小时，请按时提交，谢谢。<br><font color='red'>每天下午4点半检查工作量情况，不足5小时自动发送此邮件。</font><br><font color='red'>此为系统自动发送，请勿回复</font>"
                     }
+
                     /*smtpTransport.sendMail(mailOptions, function(error, response){
                         if(error){
-                            console.log(error);
+                            log.writeErr(error);
                         }else{
-                            console.log("邮件已经发送: " + response.message);
+                            log.writeInfo("邮件已经发送: " +e.username+":"+ response.message);
                         }
                         //smtpTransport.close();
-
+                        sleep(2000);//间隔2秒，防止频繁发邮件限制
                         callback();
                     });*/
                 }
@@ -69,7 +70,10 @@ exports.schedule = function(){
 
         });
     });
-
+    function sleep(milliSeconds) {
+        var startTime = new Date().getTime();
+        while (new Date().getTime() < startTime + milliSeconds);
+    };
 }
 
 

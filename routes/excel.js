@@ -12,53 +12,69 @@ exports.test = function(req,res){
     var endtime = req.params.endtime;
     var isAll = req.params.isAll;
     var conf ={};
-    //conf.stylesXmlFile = "routes/styles.xml";
+    conf.stylesXmlFile = "routes/styles.xml";
     conf.cols = [{//编号
         caption:'编号',
         type:'number',
+        beforeCellWrite:addColor(),
         width:10
     },{//填写时间
         caption:'填写时间',
+        beforeCellWrite:addColor(),
         type:'timestamp',
         width:20
     },{//开始时间
         caption:'开始时间',
+        beforeCellWrite:addColor(),
         type:'timestamp',
         width:20
     },{//结束时间
         caption:'结束时间',
+        beforeCellWrite:addColor(),
         type:'timestamp',
         width:20
     },{//工作标题
         caption:'工作标题',
         captionStyleIndex: 1,
+        beforeCellWrite:addColor(),
         type:'string',
         width:15
     },{//工作描述
         caption:'工作描述',
         captionStyleIndex: 1,
+        beforeCellWrite:addColor(),
         type:'string',
         width:15
     },{//工作类型
         caption:'工作类型',
+        beforeCellWrite:addColor(),
         type:'string',
         width:10
     },{//工作负责人
         caption:'工作负责人',
         captionStyleIndex: 1,
+        beforeCellWrite:addColor(),
         type:'string',
         width:15
     },{//工时
         caption:'工时',
+        beforeCellWrite:addColor(),
         type:'number',
         width:10
     },{//工作系数
         caption:'工作系数',
+        beforeCellWrite:addColor(),
         type:'number',
         width:10
     },{//工时合计
         caption:'工时合计',
+        beforeCellWrite:addColor(),
         type:'number',
+        width:10
+    },{//
+        caption:'状态',
+        beforeCellWrite:setStatus(),
+        type:'string',
         width:10
     }];
 
@@ -66,7 +82,6 @@ exports.test = function(req,res){
     temp.error       = null;
     temp.issort      = true;
     reportdao.WorkRecord(starttime,endtime,req.session.user.Id,isAll,function(dbdata){
-        console.log("WorkRecord :"+JSON.stringify(dbdata));
         temp.stateinfo = [];
 
         var types={"1":"日常维护","2":"项目维护","3":"故障处理","4":"学习培训","5":"技术创新",
@@ -79,18 +94,51 @@ exports.test = function(req,res){
             dbdata[i].Description="";
             }
             dbdata[i].Type=types[dbdata[i].Type];
-            temp.stateinfo.push([
-                dbdata[i].id,
-                dbdata[i].UpTime,
-                dbdata[i].StartTime,
-                dbdata[i].EndTime,
-                dbdata[i].Subject,dbdata[i].Description,dbdata[i].Type,
-            dbdata[i].UserName,
-            dbdata[i].WorkTimeLength,
-            dbdata[i].Coefficient,
-            dbdata[i].wc
-            ]);
+
+            if(temp.stateinfo.length>0){
+                var flag=false;
+                for(var da in temp.stateinfo){
+                    if(temp.stateinfo[da][2]<dbdata[i].EndTime&&temp.stateinfo[da][3]>dbdata[i].StartTime&&temp.stateinfo[da][7]==dbdata[i].UserName){
+                       console.log(temp.stateinfo[da][2]);
+                        console.log(dbdata[i].StartTime);
+                        temp.stateinfo[da][11]=1;
+                        flag=true;
+                    }
+                }
+                if(!flag){
+                    if(toYMD(dbdata[i].StartTime)!=toYMD(dbdata[i].EndTime)){
+                        flag=true;
+                    }
+                }
+                temp.stateinfo.push([
+                    dbdata[i].id,
+                    dbdata[i].UpTime,
+                    dbdata[i].StartTime,
+                    dbdata[i].EndTime,
+                    dbdata[i].Subject,dbdata[i].Description,dbdata[i].Type,
+                    dbdata[i].UserName,
+                    dbdata[i].WorkTimeLength,
+                    dbdata[i].Coefficient,
+                    dbdata[i].wc,
+                    flag==false?0:1
+                ]);
+            }else{
+                temp.stateinfo.push([
+                    dbdata[i].id,
+                    dbdata[i].UpTime,
+                    dbdata[i].StartTime,
+                    dbdata[i].EndTime,
+                    dbdata[i].Subject,dbdata[i].Description,dbdata[i].Type,
+                    dbdata[i].UserName,
+                    dbdata[i].WorkTimeLength,
+                    dbdata[i].Coefficient,
+                    dbdata[i].wc,
+                    toYMD(dbdata[i].StartTime)==toYMD(dbdata[i].EndTime)?0:1
+                ]);
+            }
         }
+
+
 
         conf.rows =temp.stateinfo;
         var result = nodeExcel.execute(conf);
@@ -105,7 +153,6 @@ exports.test = function(req,res){
 }
 exports.download = function(req,res){
     var filename =req.params.filename; // 当前是那一天
-    console.log("filename : "+filename);
     var pdf = fs.createReadStream("./public/source/"+filename);
     res.writeHead(200, {
         'Content-Type': 'application/force-download',
@@ -116,7 +163,6 @@ exports.download = function(req,res){
 
 exports.report = function(req,res){
 
-    //console.log(i18n.getLocale());
     var userid=req.params.userid;
     if(userid !=null)
     {   req.session.quser={};
@@ -145,7 +191,6 @@ exports.report = function(req,res){
             user.UserName=dbdata[i].UserName;
             users.push(user);
         }
-        console.log("users :"+JSON.stringify(users));
         res.render('report',{title:req.session.user.UserName+"，您好",users:users,quserid:req.session.quser.userId,userid:req.session.user.Id});
     },function(err) {
 
@@ -183,7 +228,6 @@ exports.stat_all = function(req,res){
             user.UserName=dbdata[i].UserName;
             users.push(user);
         }
-        console.log("users :"+JSON.stringify(users));
         res.render('stat_all',{title:req.session.user.UserName+"，您好",users:users,quserid:req.session.quser.userId,userid:req.session.user.Id});
     },function(err) {
     });
@@ -218,7 +262,6 @@ exports.wrdetail = function(req,res){
             user.UserName=dbdata[i].UserName;
             users.push(user);
         }
-        console.log("users :"+JSON.stringify(users));
         res.render('wr_detail',{title:req.session.user.UserName+"，您好",users:users,quserid:req.session.quser.userId,userid:req.session.user.Id,isAll:"false"});
     },function(err) {
     });
@@ -253,7 +296,6 @@ exports.wralldetail = function(req,res){
             user.UserName=dbdata[i].UserName;
             users.push(user);
         }
-        console.log("users :"+JSON.stringify(users));
         res.render('wr_detail',{title:req.session.user.UserName+"，您好",users:users,quserid:req.session.quser.userId,userid:req.session.user.Id,isAll:"true"});
     },function(err) {
     });
@@ -290,7 +332,6 @@ exports.importwr = function(req,res){
             user.UserName=dbdata[i].UserName;
             users.push(user);
         }
-        console.log("users :"+JSON.stringify(users));
         res.render('import_wr',{title:req.session.user.UserName+"，您好",users:users,quserid:req.session.quser.userId,userid:req.session.user.Id,importinfo:importinfo});
     },function(err) {
     });
@@ -315,12 +356,10 @@ exports.query = function(req,res){
         }
         var respstr =JSON.stringify(temp);
         respstr = respstr.replace(/\//ig,"\\\/");
-        console.log("respstr : "+respstr);
         res.set('Content-Type', 'application/json; charset=utf-8');
         res.send(respstr);
 
     },function(err) {
-        console.log(JSON.stringify(err));
         ret.error = {"ErrorCode":"DBError","ErrorMsg":__("dberror")};
         res.json(ret);
     });
@@ -344,13 +383,11 @@ exports.statall = function(req,res){
             temp.stateinfo.push(statinfo);
         }
         var respstr =JSON.stringify(temp);
-        console.log("StateAll : "+respstr);
         respstr = respstr.replace(/\//ig,"\\\/");
         res.set('Content-Type', 'application/json; charset=utf-8');
         res.send(respstr);
 
     },function(err) {
-        console.log(JSON.stringify(err));
         ret.error = {"ErrorCode":"DBError","ErrorMsg":__("dberror")};
         res.json(ret);
     });
@@ -385,7 +422,6 @@ exports.wr_detail = function(req,res){
             temp.stateinfo.push(statinfo);
         }
         var respstr =JSON.stringify(temp);
-        console.log("WR_Detail : "+respstr);
         respstr = respstr.replace(/\//ig,"\\\/");
         res.set('Content-Type', 'application/json; charset=utf-8');
         res.send(respstr);
@@ -395,4 +431,27 @@ exports.wr_detail = function(req,res){
         ret.error = {"ErrorCode":"DBError","ErrorMsg":__("dberror")};
         res.json(ret);
     });
+}
+function toYMD(date){
+    return date.substr(0,10);
+}
+function addColor(){
+    return function(row, cellData, eOpt){
+        if (row[11]==1){
+            eOpt.styleIndex = 3;
+        }
+        return cellData;
+    }
+}
+function setStatus(){
+    return function(row, cellData, eOpt){
+        if (row[11]==1){
+            eOpt.styleIndex = 3;
+        }
+        if(cellData==1){
+            return "异常";
+        }else{
+            return "正常";
+        }
+    }
 }

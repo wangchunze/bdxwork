@@ -49,6 +49,7 @@ router.post('/file-upload', type, function(req, res){
         data.Description =wr[i][3];
         data.Coefficient = wr[i][5];
         data.UserId =req.session.user.Id;
+        data.UPTime=new Date();
         data.StartTime =new Date(wr[i][0]) ;
         data.EndTime =new Date(wr[i][1]);
         data.WorkTimeLength=(data.EndTime-data.StartTime)/1000;

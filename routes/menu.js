@@ -29,12 +29,11 @@ exports.query = function(req,res){
         }
         var respstr =JSON.stringify(temp);
         respstr = respstr.replace(/\//ig,"\\\/");
-        console.log("respstr : "+respstr);
         res.set('Content-Type', 'application/json; charset=utf-8');
         res.send(respstr);
 
     },function(err) {
-        console.log(JSON.stringify(err));
+        log.writeErr(JSON.stringify(err));
         ret.error = {"ErrorCode":"DBError","ErrorMsg":__("dberror")};
         res.json(ret);
     });

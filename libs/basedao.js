@@ -51,6 +51,5 @@ MySqlConnection.prototype.query =function (sql, args, rsCallback, errorCallback 
             }
         }
     });
-    console.log(query.sql);
 }
 exports = MySqlConnection ;
