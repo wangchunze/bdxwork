@@ -62,6 +62,16 @@ router.post('/file-upload', type, function(req, res){
             || data.StartTime==null || data.EndTime==null ){
             importinfo.push("待导入数据中第"+i+"条数据不全");
          }
+        //只能填当月7天以内的数据
+        var currentDay=new Date();
+        var limitDate=new Date(currentDay.getTime()-7*24*3600*1000);
+        limitDate.setHours(0);limitDate.setMinutes(0);limitDate.setSeconds(0);
+        var monthFirstDay=new Date();
+        monthFirstDay.setDate(1);
+        monthFirstDay.setHours(0);monthFirstDay.setMinutes(0);monthFirstDay.setSeconds(0);
+        if((limitDate<monthFirstDay&&data.StartTime<monthFirstDay)||(limitDate>monthFirstDay&&data.StartTime<limitDate)){
+            importinfo.push("待导入数据中第"+i+"条数据超期不能导入");
+        }
         if(datas.length>0){//验证本次插入数据是否有时间交叉
            for(var da in datas){
                if(datas[da].StartTime<data.EndTime&&datas[da].EndTime>data.StartTime){

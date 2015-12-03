@@ -294,6 +294,19 @@ exports.save = function(req,res){
       res.json(ret);
       return;
   }
+  //只能填当月7天以内的数据
+    var currentDay=new Date();
+    var limitDate=new Date(currentDay.getTime()-7*24*3600*1000);
+    limitDate.setHours(0);limitDate.setMinutes(0);limitDate.setSeconds(0);
+    var monthFirstDay=new Date();
+    monthFirstDay.setDate(1);
+    monthFirstDay.setHours(0);monthFirstDay.setMinutes(0);monthFirstDay.setSeconds(0);
+  if((limitDate<monthFirstDay&&data.StartTime<monthFirstDay)||(limitDate>monthFirstDay&&data.StartTime<limitDate)){
+        ret.IsSuccess = false;
+        ret.Msg       = "只能填当月且7天之内的工作记录！";
+        res.json(ret);
+        return;
+  }
   //时间段重复限制
 
     calendardao.QueryCalendarIsUse(id,data.StartTime,data.EndTime,req.session.user.Id,zonediff,function(dbdata){
@@ -358,6 +371,7 @@ exports.add = function(req,res){
     var data          = {};
     data.Subject      = req.body.CalendarTitle
     var strStartTime  = req.body.CalendarStartTime;
+
     var strEndTime    = req.body.CalendarEndTime;
     var isallday      = req.body.IsAllDayEvent ;
     var clientzone    = req.body.timezone;
@@ -388,6 +402,28 @@ exports.add = function(req,res){
 
     data.StartTime    = new Date(starttimp);
     data.EndTime      = new Date(endtimp);
+    //跨天限制
+    if(!(data.StartTime.getYear()==data.EndTime.getYear()&&data.StartTime.getMonth()==data.EndTime.getMonth()
+        &&data.StartTime.getDate()==data.EndTime.getDate())
+    ){
+        ret.IsSuccess = false;
+        ret.Msg       = "开始时间与结束时间不能跨天！";
+        res.json(ret);
+        return;
+    }
+    //只能填当月7天以内的数据
+    var currentDay=new Date();
+    var limitDate=new Date(currentDay.getTime()-7*24*3600*1000);
+    limitDate.setHours(0);limitDate.setMinutes(0);limitDate.setSeconds(0);
+    var monthFirstDay=new Date();
+    monthFirstDay.setDate(1);
+    monthFirstDay.setHours(0);monthFirstDay.setMinutes(0);monthFirstDay.setSeconds(0);
+    if((limitDate<monthFirstDay&&data.StartTime<monthFirstDay)||(limitDate>monthFirstDay&&data.StartTime<limitDate)){
+        ret.IsSuccess = false;
+        ret.Msg       = "只能填当月且7天之内的工作记录！";
+        res.json(ret);
+        return;
+    }
     var worktimelength=(data.EndTime-data.StartTime)/1000;
 
     //时区偏差
@@ -408,24 +444,38 @@ exports.add = function(req,res){
     //data.Location      = '宝芝林';
     data.MasterId      = clientzone ;
 
-    calendardao.addCalendar(data, function(id){        
-        if(id>0)
-        {
-          ret.IsSuccess = true;
-          ret.Msg       = __("successmsg");
-          ret.Data      = id   
-        }  
-        else
-        {
-          ret.IsSuccess = false;
-          ret.Msg       = __("defaulterrormsg");         
-        }  
-        res.json(ret);
-    },function(err) {
+
+    //时间段重复限制
+
+    calendardao.QueryCalendarIsUse(-1,data.StartTime,data.EndTime,req.session.user.Id,zonediff,function(dbdata){
+        if(dbdata.length>0){
             ret.IsSuccess = false;
-            ret.Msg = __("dberror");
+            ret.Msg       = "所选时间被使用，请修改！";
             res.json(ret);
-        })
+            return;
+        }else{
+            calendardao.addCalendar(data, function(id){
+                if(id>0)
+                {
+                    ret.IsSuccess = true;
+                    ret.Msg       = __("successmsg");
+                    ret.Data      = id
+                }
+                else
+                {
+                    ret.IsSuccess = false;
+                    ret.Msg       = __("defaulterrormsg");
+                }
+                res.json(ret);
+            },function(err) {
+                ret.IsSuccess = false;
+                ret.Msg = __("dberror");
+                res.json(ret);
+            })
+        }
+    },function(err) {
+
+    });
 }
 exports.update =function(req,res){
     var ret         = {};

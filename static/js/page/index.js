@@ -163,8 +163,10 @@ define(function(require, exports, module) { //参数名字不能改
         }              
     }
     function cal_onerror(type,data)
-    {   
-      $("#errorpannel").show(); 
+    {
+        $("#errorpannel").html(data.Msg);
+        $("#errorpannel").show();
+        window.setTimeout(function(){  $("#xgcalendarp").BCalReload();},1000);
     }
     function edit(data)
     { 
