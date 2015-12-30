@@ -5,6 +5,7 @@ var viewhelper = require("../libs/viewhelper");
 var i18n = require('i18n');
 
 var TIMEZONE_INDEX = new Date().getTimezoneOffset()/60 * -1;
+var canEditDayNum=7;
 
 exports.index = function(req,res){
     var userid=req.params.userid;
@@ -296,7 +297,7 @@ exports.save = function(req,res){
   }
   //只能填当月7天以内的数据
     var currentDay=new Date();
-    var limitDate=new Date(currentDay.getTime()-7*24*3600*1000);
+    var limitDate=new Date(currentDay.getTime()-canEditDayNum*24*3600*1000);
     limitDate.setHours(0);limitDate.setMinutes(0);limitDate.setSeconds(0);
     var monthFirstDay=new Date();
     monthFirstDay.setDate(1);
@@ -413,7 +414,7 @@ exports.add = function(req,res){
     }
     //只能填当月7天以内的数据
     var currentDay=new Date();
-    var limitDate=new Date(currentDay.getTime()-7*24*3600*1000);
+    var limitDate=new Date(currentDay.getTime()-canEditDayNum*24*3600*1000);
     limitDate.setHours(0);limitDate.setMinutes(0);limitDate.setSeconds(0);
     var monthFirstDay=new Date();
     monthFirstDay.setDate(1);
